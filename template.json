@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "appName": {
+            "minLength": 3,
+            "maxLength": 15,
+            "type": "String",
+            "metadata": {
+                "description": "This is the name as prefix for all other services. DO NOT INCLUDE ANY EXTRANEOUS CHARACTERS SUCH AS DASHES, UNDERSCORES, ETC."
+            }
+        }
+    },
+    "variables": {
+        "cleanAppName": "[replace(replace(replace(toLower(parameters('appName')), '-', ''), '_', ''), '.', '')]",
+        "par1-storage1Name": "[concat(variables('cleanAppName'),'mlstorage')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('par1-storage1Name')]",
+            "apiVersion": "2015-06-15",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "par1-storage1"
+            },
+            "properties": {
+                "accountType": "Standard_LRS",
+                "dependsOn": []
+            }
+        }
+    ]
+}
