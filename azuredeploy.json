@@ -5,7 +5,7 @@
         "appName": {
             "minLength": 3,
             "maxLength": 15,
-            "type": "String",
+            "type": "string",
             "metadata": {
                 "description": "This is the name as prefix for all other services. DO NOT INCLUDE ANY EXTRANEOUS CHARACTERS SUCH AS DASHES, UNDERSCORES, ETC."
             }
@@ -14,9 +14,7 @@
     "variables": {
         "cleanAppName": "[replace(replace(replace(toLower(parameters('appName')), '-', ''), '_', ''), '.', '')]",
         "par1-storage1Name": "[concat(variables('cleanAppName'),'storage')]",
-        "dbworkspaceName":"[concat(variables('cleanAppName'),'databricksworkspace')]",
-        "managedResourceGroupName": "[concat('databricks-rg-', variables('cleanAppname'), '-', uniqueString(variables('cleanAppname'), resourceGroup().id))]"
-    },
+        "adfname": "[concat(variables('cleanAppName'),'adfv2')]"},
     "resources": [
         {
             "type": "Microsoft.Storage/storageAccounts",
@@ -29,6 +27,15 @@
             "properties": {
                 "accountType": "Standard_LRS",
                 "dependsOn": []
+            }
+        },
+        {
+            "apiVersion": "2018-06-01",
+            "name": "[variables('adfname')]",
+            "location": "[resourceGroup().location]",
+            "type": "Microsoft.DataFactory/factories",
+            "identity": {
+                "type": "SystemAssigned"
             }
         }
     ]
