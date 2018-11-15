@@ -13,7 +13,9 @@
     },
     "variables": {
         "cleanAppName": "[replace(replace(replace(toLower(parameters('appName')), '-', ''), '_', ''), '.', '')]",
-        "par1-storage1Name": "[concat(variables('cleanAppName'),'mlstorage')]"
+        "par1-storage1Name": "[concat(variables('cleanAppName'),'storage')]",
+        "dbworkspaceName":"[concat(variables('cleanAppName'),'databricksworkspace')]",
+        "managedResourceGroupName": "[concat('databricks-rg-', variables('cleanAppname'), '-', uniqueString(variables('cleanAppname'), resourceGroup().id))]"
     },
     "resources": [
         {
@@ -28,6 +30,22 @@
                 "accountType": "Standard_LRS",
                 "dependsOn": []
             }
-        }
+        },
+        {
+            "type": "Microsoft.Databricks/workspaces",
+            "name": "[variables('dbworkspaceName')]",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2018-04-01",
+            "sku": {
+              "name": ["premium"]
+            },
+
+            "properties": {
+      
+              "ManagedResourceGroupId": "[concat(subscription().id, '/resourceGroups/', variables('managedResourceGroupName'))]"
+      
+            }
+      
+          }
     ]
 }
