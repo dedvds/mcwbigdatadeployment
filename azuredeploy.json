@@ -30,18 +30,6 @@
                 "accountType": "Standard_LRS",
                 "dependsOn": []
             }
-        },
-        {
-            "type": "Microsoft.Databricks/workspaces",
-            "name": "[variables('dbworkspaceName')]",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2018-04-01",
-            "sku": {
-              "name": ["premium"]
-            },
-            "properties": {
-                    "ManagedResourceGroupId": "[concat(subscription().id, '/resourceGroups/', variables('managedResourceGroupName'))]"
-            }
-          }
+        }
     ]
 }
